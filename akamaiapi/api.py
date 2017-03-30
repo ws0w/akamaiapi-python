@@ -44,13 +44,17 @@ class API:
         return nonce
 
     def _timestamp(self):
-        #now = mst.localize(datetime.datetime.now()).astimezone(utc)
-        #ts = now.strftime("%Y%m%dT%H:%M:%S%z")
-        #tmp = os.environ['TZ']
+        try:
+            tmp = os.environ['TZ']
+        except KeyError:
+            tmp = None
         os.environ['TZ'] = 'UTC'
         now = datetime.datetime.now()
         ts = now.strftime("%Y%m%dT%H:%M:%S+0000")
-        #os.environ['TZ'] = tmp
+        if tmp is None:
+            del os.environ['TZ']
+        else:
+            os.environ['TZ'] = tmp
         return ts
 
     def get(self,path):
